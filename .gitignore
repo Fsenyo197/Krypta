@@ -1,0 +1,65 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+
+# --- Virtual Envs ---
+.env
+.venv
+venv/
+ENV/
+
+# --- Env & Config ---
+*.env
+.env.*
+*.ini
+*.cfg
+*.toml
+secrets.json
+
+# --- IDEs & Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs ---
+*.log
+*.out
+*.err
+
+# --- Migrations (if auto-generated and not meant for versioning) ---
+migrations/
+alembic/
+
+# --- Cache & Build ---
+*.db
+*.sqlite3
+*.sqlite
+*.db-journal
+.cache/
+pytest_cache/
+.coverage
+htmlcov/
+
+# --- Node (if you add frontend in repo) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Docker ---
+/docker-compose.override.yml
+**/.dockerignore
+**/Dockerfile.*.local
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
