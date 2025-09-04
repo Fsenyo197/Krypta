@@ -5,8 +5,13 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.staticfiles import StaticFiles
 from whitenoise import WhiteNoise
 from app.config import settings
+from app.routes import register_routers
+
 
 app = FastAPI(title="Identity Services API", version="1.0")
+
+# Register all routers from routes/__init__.py
+register_routers(app)
 
 # Pull values from .env via settings
 allowed_hosts = settings.ALLOWED_HOSTS.split(",")

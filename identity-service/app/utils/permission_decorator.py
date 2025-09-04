@@ -1,7 +1,7 @@
 from functools import wraps
 from fastapi import Depends, HTTPException, status
-from app.models.user import User
-from app.auth import get_current_user
+from app.models.user_model import User
+from app.utils.user_authenticator import get_current_user
 
 def permission_required(permission_name: str):
     def decorator(func):
