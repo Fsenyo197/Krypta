@@ -15,7 +15,7 @@ class StaffRole(str, Enum):
 
 class StaffBase(BaseModel):
     department: Optional[str]
-    role: StaffRole
+    role: Optional[StaffRole]
 
 
 class StaffCreate(StaffBase):

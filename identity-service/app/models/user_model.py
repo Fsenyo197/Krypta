@@ -19,8 +19,8 @@ class User(BaseModel):
     email = Column(String(255), unique=True, nullable=False, index=True)
     phone_number = Column(String(20), nullable=False, index=True)
     hashed_password = Column(String(255), nullable=False)
-
     is_verified = Column(Boolean, default=False, index=True)
+    is_superuser = Column(Boolean, default=False, nullable=False)
     status = Column(Enum(UserStatus), default=UserStatus.PENDING_KYC, index=True)
     twofa_secret = Column(String(64), nullable=True)
 

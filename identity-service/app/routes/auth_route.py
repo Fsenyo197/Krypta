@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from app.services.user_service import UserService
@@ -11,6 +11,9 @@ from app.utils.activity_logger import log_activity
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
+# -------------------------
+# Login
+# -------------------------
 @auth_router.post("/login", response_model=UserResponse)
 def login(
     request: Request,
@@ -42,7 +45,7 @@ def login(
         ip_address=request.client.host if request.client else None,
     )
 
-    # Log activity
+    # Log successful login
     log_activity(db, user, "login", request=request)
 
     return {
@@ -53,6 +56,9 @@ def login(
     }
 
 
+# -------------------------
+# Logout
+# -------------------------
 @auth_router.post("/logout")
 def logout(
     request: Request,
@@ -62,8 +68,15 @@ def logout(
     """Invalidate session and log activity."""
     refresh_token = request.headers.get("X-Refresh-Token")
 
-    if refresh_token:
-        SessionService.invalidate_session(db, refresh_token, user.id)
+    if not refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Refresh token missing from headers"
+        )
 
+    SessionService.invalidate_session(db, refresh_token, user.id)
+
+    # Log logout
     log_activity(db, user, "logout", request=request)
+
     return {"message": "Logged out successfully"}

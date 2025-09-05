@@ -6,14 +6,13 @@ from uuid import UUID
 from app.models.user_model import User, UserStatus
 from app.db import get_db
 import os
+from app.config import settings
+
+JWT_SECRET_KEY = settings.JWT_SECRET_KEY
+JWT_ALGORITHM = settings.JWT_ALGORITHM
 
 # OAuth2 scheme for extracting Bearer token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
-
-# Environment-based JWT config
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "supersecret")
-JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-
 
 def get_current_user(
     token: str = Depends(oauth2_scheme),
@@ -32,11 +31,9 @@ def get_current_user(
     try:
         # Decode and validate JWT
         payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
-        user_id: str = payload.get("sub")   # Standard claim
+        user_id: str = payload.get("sub")
         if not user_id:
             raise credentials_exception
-
-        # Ensure valid UUID
         try:
             user_uuid = UUID(user_id)
         except ValueError:

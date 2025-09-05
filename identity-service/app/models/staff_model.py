@@ -19,7 +19,7 @@ class Staff(BaseModel):
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     department = Column(String(100), nullable=True)
-    role = Column(Enum(StaffRole), nullable=False)
+    role = Column(Enum(StaffRole), nullable=True)
 
 
     # relationship

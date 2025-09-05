@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 import os
+from app.config import settings 
 
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "supersecret")
-JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+JWT_SECRET_KEY = settings.JWT_SECRET_KEY
+JWT_ALGORITHM = settings.JWT_ALGORITHM
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
