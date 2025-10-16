@@ -10,3 +10,4 @@ pydantic[email]
 pydantic-settings
 pytest
 pytest-asyncio
+whitenoise

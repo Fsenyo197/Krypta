@@ -6,7 +6,6 @@ from app.db import get_db
 from app.schemas.staff_schema import StaffCreate, StaffUpdate, StaffResponse
 from app.services import staff_service
 from app.utils.permission import permission_required
-from app.utils.activity_logger import log_activity
 from app.models.user_model import User
 from app.utils.current_user import get_current_user
 
@@ -24,9 +23,7 @@ def create_staff(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    staff = staff_service.create_staff(db, staff_data)
-    log_activity(db, current_user, "staff:create", request, user=str(staff.user_id))
-    return staff
+    return staff_service.create_staff(db, staff_data, actor=current_user.staff)
 
 
 # -------------------------
@@ -40,9 +37,7 @@ def get_staff(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    staff = staff_service.get_staff(db, staff_id)
-    log_activity(db, current_user, "staff:read", request, user=str(staff.user_id))
-    return staff
+    return staff_service.get_staff(db, staff_id, actor=current_user.staff)
 
 
 # -------------------------
@@ -57,9 +52,7 @@ def list_staff(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    staff_list = staff_service.list_staff(db, skip, limit)
-    log_activity(db, current_user, "staff:list", request)
-    return staff_list
+    return staff_service.list_staff(db, skip, limit)
 
 
 # -------------------------
@@ -74,9 +67,7 @@ def update_staff(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    staff = staff_service.update_staff(db, staff_id, staff_data)
-    log_activity(db, current_user, "staff:update", request, user=str(staff.user_id))
-    return staff
+    return staff_service.update_staff(db, staff_id, staff_data, actor=current_user.staff)
 
 
 # -------------------------
@@ -90,6 +81,4 @@ def delete_staff(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    staff = staff_service.delete_staff(db, staff_id)
-    log_activity(db, current_user, "staff:delete", request, user=str(staff.user_id))
-    return {"detail": "Staff deleted successfully"}
+    return staff_service.delete_staff(db, staff_id, actor=current_user.staff)

@@ -8,7 +8,6 @@ from app.db import get_db
 from app.models.user_model import User
 from app.utils.current_user import get_current_user
 from app.utils.permission import permission_required
-from app.utils.activity_logger import log_activity
 
 api_key_router = APIRouter(prefix="/api-keys", tags=["API Keys"])
 
@@ -25,7 +24,6 @@ def create_api_key(
     current_user: User = Depends(get_current_user),
 ):
     api_key = api_key_service.create_api_key(db, api_key_in)
-    log_activity(db, current_user, "apikey:create", request, api_key_id=str(api_key.id))
     return api_key
 
 
@@ -41,7 +39,6 @@ def get_api_key(
     current_user: User = Depends(get_current_user),
 ):
     api_key = api_key_service.get_api_key(db, api_key_id)
-    log_activity(db, current_user, "apikey:read", request, api_key_id=str(api_key.id))
     return api_key
 
 
@@ -57,7 +54,6 @@ def list_api_keys(
     current_user: User = Depends(get_current_user),
 ):
     api_keys = api_key_service.list_api_keys(db, user_id)
-    log_activity(db, current_user, "apikey:list", request, user_id=str(user_id) if user_id else None)
     return api_keys
 
 
@@ -74,7 +70,6 @@ def update_api_key(
     current_user: User = Depends(get_current_user),
 ):
     api_key = api_key_service.update_api_key(db, api_key_id, api_key_in)
-    log_activity(db, current_user, "apikey:update", request, api_key_id=str(api_key.id))
     return api_key
 
 
@@ -90,5 +85,4 @@ def delete_api_key(
     current_user: User = Depends(get_current_user),
 ):
     api_key_service.delete_api_key(db, api_key_id)
-    log_activity(db, current_user, "apikey:delete", request, api_key_id=str(api_key_id))
     return {"detail": "API Key deleted successfully"}

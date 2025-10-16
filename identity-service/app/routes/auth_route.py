@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, HTTPException, status
+from fastapi import APIRouter, Depends, Request, HTTPException, status, Form
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from app.services.user_service import UserService
@@ -23,6 +23,13 @@ def login(
 ):
     """Authenticate user, create session, and return JWTs."""
     user = UserService.authenticate_user(db, email, password)
+    if not user:
+        # Log failed login attempt
+        log_activity(db, None, "login_failed", request=request, current_user=None, actor=email)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password"
+        )
 
     # Generate tokens
     access_token_expires = timedelta(minutes=30)
@@ -45,8 +52,8 @@ def login(
         ip_address=request.client.host if request.client else None,
     )
 
-    # Log successful login
-    log_activity(db, user, "login", request=request)
+    # Log successful login (actor = target = user)
+    log_activity(db, user, "login", request=request, current_user=user)
 
     return {
         "user": UserResponse.from_orm(user),
@@ -76,7 +83,7 @@ def logout(
 
     SessionService.invalidate_session(db, refresh_token, user.id)
 
-    # Log logout
-    log_activity(db, user, "logout", request=request)
+    # Log logout (actor = target = user)
+    log_activity(db, user, "logout", request=request, current_user=user)
 
     return {"message": "Logged out successfully"}

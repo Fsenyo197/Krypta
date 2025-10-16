@@ -19,3 +19,4 @@ def create_refresh_token(data: dict, expires_delta: timedelta = None):
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(days=7))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+ 

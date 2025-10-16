@@ -31,7 +31,9 @@ def seed_superuser(db: Session):
 
     # create staff profile
     staff = Staff(
-        user_id=superuser.id
+        user_id=superuser.id,
+        department="IT",
+        role="superuser"
     )
     db.add(staff)
     db.flush()

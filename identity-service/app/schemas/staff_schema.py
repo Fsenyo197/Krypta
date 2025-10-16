@@ -7,15 +7,26 @@ from app.schemas.permission_schema import PermissionResponse
 
 
 class StaffRole(str, Enum):
+    SUPERUSER = "superuser"
     ADMIN = "admin"
     SUPPORT = "support"
     COMPLIANCE = "compliance"
     MANAGER = "manager"
+    GENERAL = "General"
+
+class Department(str, Enum):
+    SUPERUSER = "superuser"
+    FINANCE = "Finance"
+    MARKETING = "Marketing"
+    SUPPORT = "Support"
+    COMPLIANCE = "Compliance"
+    MANAGEMENT = "Management"
+    GENERAL = "General"
 
 
 class StaffBase(BaseModel):
-    department: Optional[str]
-    role: Optional[StaffRole]
+    department: Department = Department.GENERAL
+    role: StaffRole = StaffRole.GENERAL
 
 
 class StaffCreate(StaffBase):
@@ -24,7 +35,7 @@ class StaffCreate(StaffBase):
 
 
 class StaffUpdate(BaseModel):
-    department: Optional[str]
+    department: Optional[Department]
     role: Optional[StaffRole]
     permissions: Optional[List[str]]
 
